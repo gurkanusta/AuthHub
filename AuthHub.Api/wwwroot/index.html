@@ -1,0 +1,1030 @@
+﻿<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AuthHub Panel</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --card: #101a33;
+            --card2: #0f1730;
+            --text: #e8ecff;
+            --muted: #aab3d6;
+            --line: rgba(255,255,255,.08);
+            --accent: #7c5cff;
+            --accent2: #2de2e6;
+            --ok: #3ddc97;
+            --warn: #ffc857;
+            --bad: #ff5c7a;
+            --shadow: 0 10px 30px rgba(0,0,0,.35);
+            --radius: 18px;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--sans);
+            background: radial-gradient(1200px 600px at 20% 10%, rgba(124,92,255,.25), transparent 55%), radial-gradient(900px 500px at 85% 25%, rgba(45,226,230,.18), transparent 60%), radial-gradient(900px 600px at 50% 95%, rgba(61,220,151,.14), transparent 60%), var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit
+        }
+
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 22px
+        }
+
+        header {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 18px;
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(16,26,51,.85), rgba(16,26,51,.45));
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 14px;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: conic-gradient(from 220deg, var(--accent), var(--accent2), var(--ok), var(--accent));
+            box-shadow: 0 0 0 1px rgba(255,255,255,.10), 0 12px 26px rgba(124,92,255,.25);
+        }
+
+        h1 {
+            font-size: 18px;
+            margin: 0;
+            letter-spacing: .3px
+        }
+
+        .sub {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .top-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end
+        }
+
+        .pill {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(15,23,48,.6);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%
+        }
+
+            .dot.ok {
+                background: var(--ok)
+            }
+
+            .dot.bad {
+                background: var(--bad)
+            }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--line);
+            background: rgba(15,23,48,.55);
+            color: var(--text);
+            border-radius: 14px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: transform .06s ease, border-color .2s ease, background .2s ease;
+            font-weight: 600;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+            .btn:hover {
+                border-color: rgba(255,255,255,.18);
+                background: rgba(15,23,48,.78)
+            }
+
+            .btn:active {
+                transform: translateY(1px)
+            }
+
+            .btn.primary {
+                background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(45,226,230,.55));
+                border-color: rgba(255,255,255,.12);
+                box-shadow: 0 10px 25px rgba(124,92,255,.22);
+            }
+
+            .btn.danger {
+                background: rgba(255,92,122,.12);
+                border-color: rgba(255,92,122,.25);
+            }
+
+            .btn.good {
+                background: rgba(61,220,151,.12);
+                border-color: rgba(61,220,151,.25);
+            }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        @media(max-width: 980px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            header {
+                position: static
+            }
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(16,26,51,.72), rgba(16,26,51,.42));
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px;
+        }
+
+            .card h2 {
+                margin: 0 0 10px 0;
+                font-size: 14px;
+                color: var(--text);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 170px;
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        input, select, textarea {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(10,14,28,.55);
+            color: var(--text);
+            padding: 10px 11px;
+            outline: none;
+            font-size: 13px;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+            font-family: var(--mono)
+        }
+
+            input::placeholder, textarea::placeholder {
+                color: rgba(170,179,214,.55)
+            }
+
+        .kpi {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+            .kpi .box {
+                border: 1px solid var(--line);
+                background: rgba(15,23,48,.45);
+                border-radius: 16px;
+                padding: 10px;
+            }
+
+            .kpi .t {
+                font-size: 12px;
+                color: var(--muted)
+            }
+
+            .kpi .v {
+                font-size: 12px;
+                font-family: var(--mono);
+                word-break: break-all;
+                margin-top: 6px
+            }
+
+        .sep {
+            height: 1px;
+            background: var(--line);
+            margin: 12px 0
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 18px;
+            right: 18px;
+            max-width: 520px;
+            border-radius: 16px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            background: rgba(16,26,51,.92);
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 999;
+        }
+
+            .toast.show {
+                display: block
+            }
+
+            .toast .title {
+                font-weight: 800;
+                font-size: 13px
+            }
+
+            .toast .msg {
+                margin-top: 6px;
+                color: var(--muted);
+                font-size: 13px;
+                white-space: pre-wrap
+            }
+
+            .toast.ok {
+                border-color: rgba(61,220,151,.28)
+            }
+
+            .toast.warn {
+                border-color: rgba(255,200,87,.28)
+            }
+
+            .toast.bad {
+                border-color: rgba(255,92,122,.28)
+            }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+        }
+
+            .table th, .table td {
+                padding: 10px 10px;
+                border-bottom: 1px solid var(--line);
+                text-align: left;
+                font-size: 12px;
+                vertical-align: top;
+            }
+
+            .table th {
+                color: var(--muted);
+                font-weight: 700;
+                background: rgba(15,23,48,.55)
+            }
+
+            .table tr:last-child td {
+                border-bottom: none
+            }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(15,23,48,.55);
+            color: var(--muted);
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+            .badge.ok {
+                border-color: rgba(61,220,151,.25);
+                color: rgba(61,220,151,.95)
+            }
+
+            .badge.bad {
+                border-color: rgba(255,92,122,.25);
+                color: rgba(255,92,122,.95)
+            }
+
+        .mono {
+            font-family: var(--mono)
+        }
+
+        .tiny {
+            font-size: 11px
+        }
+
+        .right {
+            margin-left: auto
+        }
+
+        .hint {
+            font-size: 12px;
+            color: rgba(170,179,214,.7);
+            margin-top: 6px;
+            line-height: 1.35
+        }
+
+        .footer {
+            margin: 14px 0 0 0;
+            color: rgba(170,179,214,.6);
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="brand">
+                <div class="logo"></div>
+                <div>
+                    <h1>AuthHub Panel</h1>
+                    <div class="sub">JWT + Refresh Token + Logout + Roles + Rate Limit • Tek dosya dashboard</div>
+                </div>
+            </div>
+
+            <div class="top-right">
+                <div class="pill" title="API ile bağlantı durumu">
+                    <span id="statusDot" class="dot bad"></span>
+                    <span id="statusText">Bağlı değil</span>
+                </div>
+                <button class="btn" id="btnPing">Ping</button>
+                <button class="btn" id="btnOpenSwagger">Swagger</button>
+                <button class="btn danger" id="btnClear">LocalStorage Temizle</button>
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- LEFT -->
+            <div class="card">
+                <h2>
+                    Bağlantı & Kimlik
+                    <span class="badge" id="envBadge">Local</span>
+                </h2>
+
+                <div class="row">
+                    <div class="field">
+                        <label>API Base URL</label>
+                        <input id="baseUrl" placeholder="http://localhost:5158" />
+                        <div class="hint">Senin portlar: <span class="mono">http://localhost:5158</span> veya <span class="mono">https://localhost:7150</span></div>
+                    </div>
+                    <div class="field" style="flex:0.5;min-width:150px;">
+                        <label>Hızlı seçim</label>
+                        <select id="basePreset">
+                            <option value="http://localhost:5158">http://localhost:5158</option>
+                            <option value="https://localhost:7150">https://localhost:7150</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:0.4;min-width:150px;">
+                        <label>&nbsp;</label>
+                        <button class="btn primary" id="btnSaveBase">Kaydet</button>
+                    </div>
+                </div>
+
+                <div class="sep"></div>
+
+                <div class="row">
+                    <div class="field">
+                        <label>Email</label>
+                        <input id="email" placeholder="test@test.com" />
+                    </div>
+                    <div class="field">
+                        <label>Password</label>
+                        <input id="password" type="password" placeholder="Test1234!" />
+                    </div>
+                    <div class="field">
+                        <label>Full Name (Register)</label>
+                        <input id="fullName" placeholder="Test User" />
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+                    <button class="btn primary" id="btnRegister">Register</button>
+                    <button class="btn primary" id="btnLogin">Login</button>
+                    <button class="btn" id="btnWhoAmI">/Test/me</button>
+                    <button class="btn" id="btnAdminTest">/Test/admin</button>
+                </div>
+
+                <div class="kpi">
+                    <div class="box">
+                        <div class="t">Access Token</div>
+                        <div class="v mono" id="accessToken">(yok)</div>
+                        <div class="row" style="margin-top:8px;">
+                            <button class="btn" id="btnCopyAccess">Kopyala</button>
+                            <button class="btn" id="btnClearAccess">Sil</button>
+                        </div>
+                    </div>
+                    <div class="box">
+                        <div class="t">Refresh Token</div>
+                        <div class="v mono" id="refreshToken">(yok)</div>
+                        <div class="row" style="margin-top:8px;">
+                            <button class="btn" id="btnCopyRefresh">Kopyala</button>
+                            <button class="btn" id="btnClearRefresh">Sil</button>
+                        </div>
+                    </div>
+                    <div class="box">
+                        <div class="t">Expires (UTC)</div>
+                        <div class="v mono" id="expiresAt">(yok)</div>
+                        <div class="hint tiny">Token süresi bitince <b>Refresh</b> ile yenile.</div>
+                    </div>
+                    <div class="box">
+                        <div class="t">Auth Header</div>
+                        <div class="v mono" id="authHeader">(yok)</div>
+                        <div class="hint tiny">Swagger Authorize kısmına bunu yapıştırırsın.</div>
+                    </div>
+                </div>
+
+                <div class="sep"></div>
+
+                <h2>Token İşlemleri</h2>
+                <div class="row">
+                    <button class="btn good" id="btnRefresh">Refresh (Token Yenile)</button>
+                    <button class="btn danger" id="btnLogout">Logout (Refresh ile)</button>
+                    <button class="btn danger" id="btnLogoutAll">Logout All (Access ile)</button>
+                </div>
+
+                <div class="sep"></div>
+
+                <h2>Email Confirmation</h2>
+                <div class="row">
+                    <div class="field">
+                        <label>Confirm Token</label>
+                        <input id="confirmToken" placeholder="Console log'daki token" />
+                    </div>
+                    <div class="field" style="flex:0.4;min-width:160px;">
+                        <label>&nbsp;</label>
+                        <button class="btn primary" id="btnConfirmEmail">Confirm Email</button>
+                    </div>
+                </div>
+                <div class="hint">Register sonrası console’a düşen <span class="mono">EMAIL CONFIRM TOKEN</span> değerini buraya yapıştır.</div>
+
+                <div class="sep"></div>
+
+                <h2>Şifre İşlemleri</h2>
+                <div class="row">
+                    <div class="field">
+                        <label>Current Password</label>
+                        <input id="curPass" type="password" placeholder="Mevcut şifre" />
+                    </div>
+                    <div class="field">
+                        <label>New Password</label>
+                        <input id="newPass" type="password" placeholder="Yeni şifre" />
+                    </div>
+                    <div class="field" style="flex:0.4;min-width:160px;">
+                        <label>&nbsp;</label>
+                        <button class="btn primary" id="btnChangePass">Change Password</button>
+                    </div>
+                </div>
+
+                <div class="sep"></div>
+
+                <h2>Forgot / Reset Password</h2>
+                <div class="row">
+                    <div class="field">
+                        <label>Forgot Password</label>
+                        <button class="btn" id="btnForgot">Forgot Password (Token üret)</button>
+                        <div class="hint">Token console’a düşer: <span class="mono">RESET TOKEN</span></div>
+                    </div>
+                    <div class="field">
+                        <label>Reset Token</label>
+                        <input id="resetToken" placeholder="Console log'daki token" />
+                    </div>
+                    <div class="field">
+                        <label>New Password</label>
+                        <input id="resetNewPass" type="password" placeholder="Reset ile yeni şifre" />
+                    </div>
+                    <div class="field" style="flex:0.4;min-width:160px;">
+                        <label>&nbsp;</label>
+                        <button class="btn primary" id="btnReset">Reset Password</button>
+                    </div>
+                </div>
+
+                <div class="sep"></div>
+
+                <h2>İstek / Yanıt Log</h2>
+                <textarea id="log" readonly placeholder="Buraya log düşecek..."></textarea>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="card">
+                <h2>
+                    Admin Panel (Admin Role)
+                    <span class="badge" id="adminBadge">Kapalı</span>
+                </h2>
+                <div class="hint">
+                    Bu bölüm için token içinde <span class="mono">role=Admin</span> olmalı.
+                    Normal kullanıcı ile <b>403</b> alman doğru.
+                </div>
+
+                <div class="sep"></div>
+
+                <div class="row">
+                    <button class="btn primary" id="btnLoadUsers">Kullanıcıları Yükle</button>
+                </div>
+
+                <div class="sep"></div>
+
+                <h2>Rol Ata</h2>
+                <div class="row">
+                    <div class="field">
+                        <label>UserId</label>
+                        <input id="roleUserId" placeholder="kullanıcı id" />
+                    </div>
+                    <div class="field" style="flex:0.6;min-width:170px;">
+                        <label>Role</label>
+                        <select id="roleName">
+                            <option>Admin</option>
+                            <option>User</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:0.4;min-width:160px;">
+                        <label>&nbsp;</label>
+                        <button class="btn" id="btnAssignRole">Assign Role</button>
+                    </div>
+                </div>
+
+                <div class="sep"></div>
+
+                <h2>Disable / Enable User</h2>
+                <div class="row">
+                    <div class="field">
+                        <label>UserId</label>
+                        <input id="disableUserId" placeholder="kullanıcı id" />
+                    </div>
+                    <div class="field" style="flex:0.6;min-width:170px;">
+                        <label>IsDisabled</label>
+                        <select id="isDisabled">
+                            <option value="true">true (disable)</option>
+                            <option value="false">false (enable)</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:0.4;min-width:160px;">
+                        <label>&nbsp;</label>
+                        <button class="btn danger" id="btnDisable">Update User</button>
+                    </div>
+                </div>
+
+                <div class="sep"></div>
+
+                <h2>Kullanıcı Listesi</h2>
+                <div class="hint tiny">Listeden UserId kopyalayıp yukarıya yapıştırabilirsin.</div>
+                <div style="margin-top:10px; overflow:auto;">
+                    <table class="table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th style="width:26%">Id</th>
+                                <th>Email</th>
+                                <th>Confirmed</th>
+                                <th>Disabled</th>
+                                <th style="width:18%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="5" class="muted">Henüz veri yok.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sep"></div>
+                <div class="footer">
+                    AuthHub • UI tek dosya • Framework yok • Swagger’a geçmek için üstteki buton
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <div class="title" id="toastTitle">Bildirim</div>
+        <div class="msg" id="toastMsg"></div>
+    </div>
+
+    <script>
+  // ----------------------------
+  // Helpers
+  // ----------------------------
+  const $ = (id) => document.getElementById(id);
+  const LS = {
+    baseUrl: "authhub.baseUrl",
+    access: "authhub.accessToken",
+    refresh: "authhub.refreshToken",
+    exp: "authhub.expiresAtUtc"
+  };
+
+  function now() { return new Date().toISOString(); }
+
+  function log(line, obj) {
+    const box = $("log");
+    const text = typeof obj === "undefined"
+      ? `[${now()}] ${line}`
+      : `[${now()}] ${line}\n${JSON.stringify(obj, null, 2)}`;
+    box.value = (text + "\n\n" + box.value).slice(0, 20000);
+  }
+
+  function toast(type, title, msg) {
+    const t = $("toast");
+    t.className = `toast show ${type}`;
+    $("toastTitle").textContent = title;
+    $("toastMsg").textContent = msg ?? "";
+    setTimeout(() => t.classList.remove("show"), 4200);
+  }
+
+  function baseUrl() {
+    const v = $("baseUrl").value.trim().replace(/\/+$/,"");
+    return v;
+  }
+
+  function setConnected(ok) {
+    $("statusDot").className = "dot " + (ok ? "ok" : "bad");
+    $("statusText").textContent = ok ? "Bağlı" : "Bağlı değil";
+  }
+
+  function setAdminBadge(isAdmin) {
+    $("adminBadge").textContent = isAdmin ? "Admin token" : "Kapalı";
+    $("adminBadge").className = "badge " + (isAdmin ? "ok" : "");
+  }
+
+  function setEnvBadge() {
+    const u = baseUrl();
+    $("envBadge").textContent = u.includes("localhost") ? "Local" : "Remote";
+  }
+
+  function updateTokenUI() {
+    const a = localStorage.getItem(LS.access) || "";
+    const r = localStorage.getItem(LS.refresh) || "";
+    const e = localStorage.getItem(LS.exp) || "";
+
+    $("accessToken").textContent = a ? a : "(yok)";
+    $("refreshToken").textContent = r ? r : "(yok)";
+    $("expiresAt").textContent = e ? e : "(yok)";
+    $("authHeader").textContent = a ? `Bearer ${a}` : "(yok)";
+
+    // basit admin kontrolü: JWT payload'da "role" claim var mı
+    let isAdmin = false;
+    try {
+      if (a) {
+        const payload = JSON.parse(atob(a.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+        const roles = [];
+        for (const k of Object.keys(payload)) {
+          if (k.endsWith("/role") || k === "role") {
+            const v = payload[k];
+            if (Array.isArray(v)) roles.push(...v);
+            else roles.push(v);
+          }
+        }
+        isAdmin = roles.includes("Admin");
+      }
+    } catch {}
+    setAdminBadge(isAdmin);
+  }
+
+  async function api(path, { method="GET", body=null, auth=false } = {}) {
+    const url = baseUrl() + path;
+    const headers = { "Content-Type": "application/json" };
+    if (auth) {
+      const token = localStorage.getItem(LS.access);
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    let reqBody = null;
+    if (body !== null) reqBody = JSON.stringify(body);
+
+    log(`➡️ ${method} ${url}`, body ?? undefined);
+
+    const res = await fetch(url, { method, headers, body: reqBody });
+
+    const isJson = (res.headers.get("content-type") || "").includes("application/json");
+    const data = isJson ? await res.json().catch(()=>null) : await res.text().catch(()=>null);
+
+    log(`⬅️ ${res.status} ${res.statusText}`, data ?? undefined);
+
+    if (!res.ok) {
+      // Rate limiting
+      if (res.status === 429) {
+        toast("warn", "Rate limit", "Çok hızlı istek attın. Biraz yavaşla (429).");
+      } else if (res.status === 401) {
+        toast("bad", "401 Unauthorized", typeof data === "string" ? data : "Yetkisiz.");
+      } else if (res.status === 403) {
+        toast("bad", "403 Forbidden", "Bu işlem için rol/izin yok.");
+      } else {
+        toast("bad", `Hata (${res.status})`, typeof data === "string" ? data : JSON.stringify(data, null, 2));
+      }
+      throw { status: res.status, data };
+    }
+
+    return data;
+  }
+
+  async function ping() {
+    try {
+      // Rate limiter olsa bile basit bir endpoint çağırıyoruz.
+      // TestController yoksa /swagger'a HEAD da atabiliriz; ama en iyi /api/Test/me (auth gerekebilir).
+      // Burada direkt swagger json yok; o yüzden root'a GET deneyelim.
+      const u = baseUrl() + "/swagger";
+      const res = await fetch(u, { method: "GET" });
+      setConnected(res.ok || res.status === 401 || res.status === 404);
+      toast("ok", "Ping", `Swagger endpoint ping: ${res.status}`);
+    } catch {
+      setConnected(false);
+      toast("bad", "Ping", "Bağlantı yok.");
+    }
+  }
+
+  function saveBase() {
+    localStorage.setItem(LS.baseUrl, baseUrl());
+    setEnvBadge();
+    toast("ok", "Kaydedildi", "Base URL kaydedildi.");
+  }
+
+  function setTokens(tokens) {
+    if (!tokens) return;
+    if (tokens.accessToken) localStorage.setItem(LS.access, tokens.accessToken);
+    if (tokens.refreshToken) localStorage.setItem(LS.refresh, tokens.refreshToken);
+    if (tokens.expiresAtUtc) localStorage.setItem(LS.exp, tokens.expiresAtUtc);
+    updateTokenUI();
+  }
+
+  function copyText(text) {
+    navigator.clipboard.writeText(text).then(
+      () => toast("ok", "Kopyalandı", "Panoya kopyalandı."),
+      () => toast("warn", "Kopyalanamadı", "Tarayıcı izni yok.")
+    );
+  }
+
+  // ----------------------------
+  // UI actions
+  // ----------------------------
+  $("btnSaveBase").onclick = async () => { saveBase(); await ping(); };
+  $("basePreset").onchange = () => { $("baseUrl").value = $("basePreset").value; setEnvBadge(); };
+
+  $("btnOpenSwagger").onclick = () => window.open(baseUrl() + "/swagger", "_blank");
+  $("btnPing").onclick = () => ping();
+
+  $("btnClear").onclick = () => {
+    localStorage.removeItem(LS.access);
+    localStorage.removeItem(LS.refresh);
+    localStorage.removeItem(LS.exp);
+    toast("ok", "Temizlendi", "Tokenlar temizlendi.");
+    updateTokenUI();
+  };
+
+  $("btnCopyAccess").onclick = () => {
+    const a = localStorage.getItem(LS.access) || "";
+    if (!a) return toast("warn","Yok","Access token yok.");
+    copyText(a);
+  };
+  $("btnCopyRefresh").onclick = () => {
+    const r = localStorage.getItem(LS.refresh) || "";
+    if (!r) return toast("warn","Yok","Refresh token yok.");
+    copyText(r);
+  };
+  $("btnClearAccess").onclick = () => { localStorage.removeItem(LS.access); updateTokenUI(); };
+  $("btnClearRefresh").onclick = () => { localStorage.removeItem(LS.refresh); updateTokenUI(); };
+
+  $("btnRegister").onclick = async () => {
+    try {
+      const body = { email: $("email").value.trim(), password: $("password").value, fullName: $("fullName").value.trim() || null };
+      const data = await api("/api/Auth/register", { method:"POST", body });
+      toast("ok", "Register", typeof data === "string" ? data : "Kayıt tamam.");
+    } catch {}
+  };
+
+  $("btnLogin").onclick = async () => {
+    try {
+      const body = { email: $("email").value.trim(), password: $("password").value };
+      const tokens = await api("/api/Auth/login", { method:"POST", body });
+      setTokens(tokens);
+      toast("ok", "Login", "Tokenlar alındı.");
+    } catch {}
+  };
+
+  $("btnConfirmEmail").onclick = async () => {
+    try {
+      const body = { email: $("email").value.trim(), token: $("confirmToken").value.trim() };
+      const data = await api("/api/Auth/confirm-email", { method:"POST", body });
+      toast("ok", "Email Confirm", typeof data === "string" ? data : "Email confirmed.");
+    } catch {}
+  };
+
+  $("btnForgot").onclick = async () => {
+    try {
+      const body = { email: $("email").value.trim() };
+      const data = await api("/api/Auth/forgot-password", { method:"POST", body });
+      toast("ok", "Forgot Password", typeof data === "string" ? data : "Token üretildi (console).");
+    } catch {}
+  };
+
+  $("btnReset").onclick = async () => {
+    try {
+      const body = {
+        email: $("email").value.trim(),
+        token: $("resetToken").value.trim(),
+        newPassword: $("resetNewPass").value
+      };
+      const data = await api("/api/Auth/reset-password", { method:"POST", body });
+      toast("ok", "Reset Password", typeof data === "string" ? data : "Reset ok.");
+    } catch {}
+  };
+
+  $("btnChangePass").onclick = async () => {
+    try {
+      const body = { currentPassword: $("curPass").value, newPassword: $("newPass").value };
+      const data = await api("/api/Auth/change-password", { method:"POST", body, auth:true });
+      toast("ok", "Change Password", typeof data === "string" ? data : "Şifre değişti.");
+    } catch {}
+  };
+
+  $("btnRefresh").onclick = async () => {
+    try {
+      const r = localStorage.getItem(LS.refresh);
+      if (!r) return toast("warn","Yok","Refresh token yok.");
+      const tokens = await api("/api/Auth/refresh", { method:"POST", body:{ refreshToken: r } });
+      setTokens(tokens);
+      toast("ok", "Refresh", "Token yenilendi.");
+    } catch {}
+  };
+
+  $("btnLogout").onclick = async () => {
+    try {
+      const r = localStorage.getItem(LS.refresh);
+      if (!r) return toast("warn","Yok","Refresh token yok.");
+      const data = await api("/api/Auth/logout", { method:"POST", body:{ refreshToken: r } });
+      localStorage.removeItem(LS.refresh);
+      localStorage.removeItem(LS.access);
+      localStorage.removeItem(LS.exp);
+      updateTokenUI();
+      toast("ok", "Logout", typeof data === "string" ? data : "Çıkış yapıldı.");
+    } catch {}
+  };
+
+  $("btnLogoutAll").onclick = async () => {
+    try {
+      const data = await api("/api/Auth/logout-all", { method:"POST", body:{}, auth:true });
+      localStorage.removeItem(LS.refresh);
+      localStorage.removeItem(LS.access);
+      localStorage.removeItem(LS.exp);
+      updateTokenUI();
+      toast("ok", "Logout All", typeof data === "string" ? data : "Tüm oturumlar kapandı.");
+    } catch {}
+  };
+
+  $("btnWhoAmI").onclick = async () => {
+    try {
+      const data = await api("/api/Test/me", { method:"GET", auth:true });
+      toast("ok", "/Test/me", "200 OK");
+      log("✅ /Test/me", data);
+    } catch {}
+  };
+
+  $("btnAdminTest").onclick = async () => {
+    try {
+      const data = await api("/api/Test/admin", { method:"GET", auth:true });
+      toast("ok", "/Test/admin", "200 OK");
+      log("✅ /Test/admin", data);
+    } catch {}
+  };
+
+  // Admin panel
+  function renderUsers(rows) {
+    const tb = $("usersTable").querySelector("tbody");
+    tb.innerHTML = "";
+    if (!rows || rows.length === 0) {
+      tb.innerHTML = `<tr><td colspan="5" class="muted">Kullanıcı yok.</td></tr>`;
+      return;
+    }
+
+    for (const u of rows) {
+      const tr = document.createElement("tr");
+
+      const id = document.createElement("td");
+      id.className = "mono";
+      id.textContent = u.id;
+
+      const em = document.createElement("td");
+      em.textContent = u.email || "(null)";
+
+      const conf = document.createElement("td");
+      conf.innerHTML = u.emailConfirmed
+        ? `<span class="badge ok">true</span>`
+        : `<span class="badge bad">false</span>`;
+
+      const dis = document.createElement("td");
+      dis.innerHTML = u.isDisabled
+        ? `<span class="badge bad">true</span>`
+        : `<span class="badge ok">false</span>`;
+
+      const act = document.createElement("td");
+      const btnCopy = document.createElement("button");
+      btnCopy.className = "btn";
+      btnCopy.textContent = "UserId kopyala";
+      btnCopy.onclick = () => {
+        copyText(u.id);
+        $("roleUserId").value = u.id;
+        $("disableUserId").value = u.id;
+      };
+      act.appendChild(btnCopy);
+
+      tr.appendChild(id);
+      tr.appendChild(em);
+      tr.appendChild(conf);
+      tr.appendChild(dis);
+      tr.appendChild(act);
+
+      tb.appendChild(tr);
+    }
+  }
+
+  $("btnLoadUsers").onclick = async () => {
+    try {
+      const users = await api("/api/Admin/users", { method:"GET", auth:true });
+      renderUsers(users);
+      toast("ok","Users","Yüklendi.");
+    } catch {}
+  };
+
+  $("btnAssignRole").onclick = async () => {
+    try {
+      const body = { userId: $("roleUserId").value.trim(), role: $("roleName").value };
+      const data = await api("/api/Admin/assign-role", { method:"POST", body, auth:true });
+      toast("ok","Assign Role", typeof data === "string" ? data : "OK");
+    } catch {}
+  };
+
+  $("btnDisable").onclick = async () => {
+    try {
+      const body = { userId: $("disableUserId").value.trim(), isDisabled: $("isDisabled").value === "true" };
+      const data = await api("/api/Admin/disable-user", { method:"POST", body, auth:true });
+      toast("ok","User Update", typeof data === "string" ? data : "OK");
+    } catch {}
+  };
+
+  // Init
+  (function init(){
+    const saved = localStorage.getItem(LS.baseUrl) || "http://localhost:5158";
+    $("baseUrl").value = saved;
+    $("basePreset").value = (saved.includes("7150") ? "https://localhost:7150" : "http://localhost:5158");
+    setEnvBadge();
+    updateTokenUI();
+    ping();
+  })();
+    </script>
+</body>
+</html>
