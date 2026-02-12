@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using AuthHub.Api.Middleware;
-
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog.Context;
 
 
@@ -18,6 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>("db");
 
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -59,6 +63,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+
+
 
 
 
