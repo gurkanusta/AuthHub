@@ -11,9 +11,20 @@ using Microsoft.AspNetCore.RateLimiting;
 using AuthHub.Api.Middleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog.Context;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
